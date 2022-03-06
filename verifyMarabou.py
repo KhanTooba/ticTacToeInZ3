@@ -167,7 +167,25 @@ def MarabouResult(data, move, y_true):
     print(stats)
     return 0
 
+def filterOut(data):
+    rows = []
+    for d in data:
+        if d[4]==1:
+            if d[0]==1 or d[2]==1 or d[6]==1 or d[8]==1:
+                rows.append(d)
+    return rows
+
 def query1(rows):
+    for r in rows:
+        move = r[9]
+        y_true = r[10]
+        x = r[0:9]
+        y_predict = MarabouResult(x, move, y_true)
+        # Now, encode the following constraints in Marabou:
+        # Result of the DNN is good but Such a move is bad and the result is hence wrong
+        print(x,"->",move,"->",y_true,"->",y_predict)    
+
+def query2(data):
     for r in rows:
         move = r[9]
         y_true = r[10]
@@ -180,3 +198,6 @@ def query1(rows):
 rows, b, c = giveData()
 constrainedRows = putConstraints(rows)
 query1(constrainedRows)
+
+rowsForQuery2 = filterOut(constrainedRows)
+query2(rowsForQuery2)
