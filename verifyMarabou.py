@@ -1,4 +1,5 @@
-from maraboupy import Marabou
+from Marabou.maraboupy import Marabou
+
 def convert(c):
     c=str(c)
     if "1" in c:
@@ -123,34 +124,47 @@ def putConstraints(rows):
             ConstrainedRows.append(row)
     return ConstrainedRows
 
-def MarabouResult(x, move, y_true, nnetFile, filename):
-    inputNames = ['Placeholder']
-    outputName = 'y_out'
-    network = Marabou.read_tf(filename = filename, inputNames = inputNames, outputName = outputName)
+def modify(data, step, output):
+    x=[]
+    for i in range(9):
+        value = convert(str(data[i]))
+        x.append(value[0])
+        x.append(value[1])
+        x.append(value[2])
+    move = convertMove(str(step))
+    for i in move:
+        x.append(i)
+    x.append(str(output))
+    return x
+
+def MarabouResult(data, move, y_true):
+    filename = "/home/tooba/Documents/ticTacToeInZ3/classifier/saved_model.pb"
+    x = modify(data,move,y_true)
+    network = Marabou.read_tf(filename)
+    # inputNames = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14",
+    #                 "15","16","17","18","19","20","21","22","23","24","25","26","27",
+    #                 "28","29","30","31","32","33","34","35","36"]
+    # outputName = "output"
+    # network = Marabou.read_tf(filename = filename, inputNames = inputNames, outputName = outputName)
     # c=0
     inputVars = network.inputVars[0][0]
     outputVars = network.outputVars[0]
-    for j in range(9):
-        value = convert(x[j])
-        i = j*3
-        network.setLowerBound(inputVars[i],int(value[0]))
-        network.setUpperBound(inputVars[i],int(value[0]))
-        network.setLowerBound(inputVars[i+1],int(value[1]))
-        network.setUpperBound(inputVars[i+1],int(value[1]))
-        network.setLowerBound(inputVars[i+2],int(value[2]))
-        network.setUpperBound(inputVars[i+2],int(value[2]))
+    for i in range(36):
+        network.setLowerBound(inputVars[i],int(x[i]))
+        network.setUpperBound(inputVars[i],int(x[i]))
     
-    network.setLowerBound(outputVars[1], 194.0)
-    network.setUpperBound(outputVars[1], 210.0)
-    # for var in network.inputVars[0]:
-    #     # eq1: 1 * var = 0
-    #     eq1 = MarabouCore.Equation(MarabouCore.Equation.EQ)
-    #     eq1.addAddend(1, var)
-    #     eq1.setScalar(x[c])
-    #     c = c + 1
-    #     net1.setLowerBound(var, 0)
-    #     net1.setUpperBound(var, 1)
-    
+    network.setLowerBound(outputVars[1], 0)
+    network.setUpperBound(outputVars[1], 1)
+    network.setLowerBound(outputVars[0], 0)
+    network.setUpperBound(outputVars[0], 1)
+
+    eq1 = Marabou.MarabouCore.Equation(Marabou.MarabouCore.Equation.GE)
+    eq1.addAddend(outputVars[0],outputVars[1])
+    network.addEquation(eq1)
+
+    vals, stats = network.solve("marabou.log")
+    print(vals)
+    print(stats)
     return 0
 
 def query1(rows):
@@ -158,14 +172,10 @@ def query1(rows):
         move = r[9]
         y_true = r[10]
         x = r[0:9]
-        # y_predict = MarabouResult(x, move, y_true)
+        y_predict = MarabouResult(x, move, y_true)
         # Now, encode the following constraints in Marabou:
-        # The move should be second case of bad i.e when the second player is winning and first player played the wrong move
-        # The move should not itself be a winning one in which case it will become a good move
         # Result of the DNN is good but Such a move is bad and the result is hence wrong
-
-
-        print(x,"->",move,"->",y_true)    
+        print(x,"->",move,"->",y_true,"->",y_predict)    
 
 rows, b, c = giveData()
 constrainedRows = putConstraints(rows)
