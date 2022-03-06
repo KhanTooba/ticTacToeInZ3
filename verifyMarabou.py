@@ -1,4 +1,4 @@
-
+from maraboupy import Marabou
 def convert(c):
     c=str(c)
     if "1" in c:
@@ -47,7 +47,7 @@ def giveData():
         c=c+1
     return rows, b, c
 
-def MarabouResult(x, move, y_true, nnetFile):
+def MarabouResult(x, move, y_true, nnetFile, filename):
     inputNames = ['Placeholder']
     outputName = 'y_out'
     network = Marabou.read_tf(filename = filename, inputNames = inputNames, outputName = outputName)
