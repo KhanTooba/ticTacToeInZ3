@@ -1,3 +1,4 @@
+from time import time
 import keras
 from tensorflow import keras
 import z3
@@ -404,15 +405,21 @@ def query2():
 
 def ques3():
     print("\n\nWorking for first query using z3:")
+    t1 = time.time()
     q1 = query1()
+    t2 = time.time()
     if q1==0:
         print("No such example exists for the first query.")
+    print("Time taken by query 1 in Z3 was: ", t2-t1, " seconds")
 
 def ques4():
     print("\n\nWorking for second query using z3:")
+    t1 = time.time()
     q2 = query2()
+    t2 = time.time()
     if q2==0:
         print("No such example exists for the second query.")
+    print("Time taken by query 2 in Z3 was: ", t2-t1, " seconds")
 
 ques3()
 ques4()

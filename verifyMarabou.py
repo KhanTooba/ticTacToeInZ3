@@ -47,6 +47,82 @@ def giveData():
         c=c+1
     return rows, b, c
 
+def goodBad(arr):
+    if (arr[0]==1 and arr[1]==1 and arr[2]==0 and arr[9]==2) or (
+        arr[0]==1 and arr[1]==0 and arr[2]==1 and arr[9]==1)or (
+        arr[0]==0 and arr[1]==1 and arr[2]==1 and arr[9]==0):
+        return 1 #This is a winning move
+    if (arr[3]==1 and arr[4]==1 and arr[5]==0 and arr[9]==5) or (
+        arr[3]==1 and arr[4]==0 and arr[5]==1 and arr[9]==4)or (
+        arr[3]==0 and arr[4]==1 and arr[5]==1 and arr[9]==3):
+        return 1 #This is a winning move
+    if (arr[6]==1 and arr[7]==1 and arr[8]==0 and arr[9]==8) or (
+        arr[6]==1 and arr[7]==0 and arr[8]==1 and arr[9]==7)or (
+        arr[6]==0 and arr[7]==1 and arr[8]==1 and arr[9]==6):
+        return 1 #This is a winning move
+    if (arr[0]==1 and arr[3]==1 and arr[6]==0 and arr[9]==6) or (
+        arr[0]==1 and arr[3]==0 and arr[6]==1 and arr[9]==3)or (
+        arr[0]==0 and arr[3]==1 and arr[6]==1 and arr[9]==0):
+        return 1 #This is a winning move
+    if (arr[1]==1 and arr[4]==1 and arr[7]==0 and arr[9]==7) or (
+        arr[1]==1 and arr[4]==0 and arr[7]==1 and arr[9]==4)or (
+        arr[1]==0 and arr[4]==1 and arr[7]==1 and arr[9]==1):
+        return 1 #This is a winning move
+    if (arr[2]==1 and arr[5]==1 and arr[8]==0 and arr[9]==8) or (
+        arr[2]==1 and arr[5]==0 and arr[8]==1 and arr[9]==5)or (
+        arr[2]==0 and arr[5]==1 and arr[8]==1 and arr[9]==2):
+        return 1 #This is a winning move
+    if (arr[0]==1 and arr[4]==1 and arr[8]==0 and arr[9]==8) or (
+        arr[0]==1 and arr[4]==0 and arr[8]==1 and arr[9]==4)or (
+        arr[0]==0 and arr[4]==1 and arr[8]==1 and arr[9]==0):
+        return 1 #This is a winning move
+    if (arr[6]==1 and arr[4]==1 and arr[2]==0 and arr[9]==2) or (
+        arr[6]==1 and arr[4]==0 and arr[2]==1 and arr[9]==4)or (
+        arr[6]==0 and arr[4]==1 and arr[2]==1 and arr[9]==6):
+        return 1 #This is a winning move
+    
+    
+    if (arr[0]==2 and arr[1]==2 and arr[2]==0 and arr[9]!=2) or (
+        arr[0]==2 and arr[1]==0 and arr[2]==2 and arr[9]!=1)or (
+        arr[0]==0 and arr[1]==2 and arr[2]==2 and arr[9]!=0):
+        return 0 #This is a case 2 bad move
+    if (arr[3]==2 and arr[4]==2 and arr[5]==0 and arr[9]!=5) or (
+        arr[3]==2 and arr[4]==0 and arr[5]==2 and arr[9]!=4)or (
+        arr[3]==0 and arr[4]==2 and arr[5]==2 and arr[9]!=3):
+        return 0 #This is a case 2 bad move
+    if (arr[6]==2 and arr[7]==2 and arr[8]==0 and arr[9]!=8) or (
+        arr[6]==2 and arr[7]==0 and arr[8]==2 and arr[9]!=7)or (
+        arr[6]==0 and arr[7]==2 and arr[8]==2 and arr[9]!=6):
+        return 0 #This is a case 2 bad move
+    if (arr[0]==2 and arr[3]==2 and arr[6]==0 and arr[9]!=6) or (
+        arr[0]==2 and arr[3]==0 and arr[6]==2 and arr[9]!=3)or (
+        arr[0]==0 and arr[3]==2 and arr[6]==2 and arr[9]!=0):
+        return 0 #This is a case 2 bad move
+    if (arr[1]==2 and arr[4]==2 and arr[7]==0 and arr[9]!=7) or (
+        arr[1]==2 and arr[4]==0 and arr[7]==2 and arr[9]!=4)or (
+        arr[1]==0 and arr[4]==2 and arr[7]==2 and arr[9]!=1):
+        return 0 #This is a case 2 bad move
+    if (arr[2]==2 and arr[5]==2 and arr[8]==0 and arr[9]!=8) or (
+        arr[2]==2 and arr[5]==0 and arr[8]==2 and arr[9]!=5)or (
+        arr[2]==0 and arr[5]==2 and arr[8]==2 and arr[9]!=2):
+        return 0 #This is a case 2 bad move
+    if (arr[0]==2 and arr[4]==2 and arr[8]==0 and arr[9]!=8) or (
+        arr[0]==2 and arr[4]==0 and arr[8]==2 and arr[9]!=4)or (
+        arr[0]==0 and arr[4]==2 and arr[8]==2 and arr[9]!=0):
+        return 0 #This is a case 2 bad move
+    if (arr[6]==2 and arr[4]==2 and arr[2]==0 and arr[9]!=2) or (
+        arr[6]==2 and arr[4]==0 and arr[2]==2 and arr[9]!=4)or (
+        arr[6]==0 and arr[4]==2 and arr[2]==2 and arr[9]!=6):
+        return 0 #This is a case 2 bad move
+    return 1
+
+def putConstraints(rows):
+    ConstrainedRows = []
+    for row in rows:
+        if goodBad(row)==0:
+            ConstrainedRows.append(row)
+    return ConstrainedRows
+
 def MarabouResult(x, move, y_true, nnetFile, filename):
     inputNames = ['Placeholder']
     outputName = 'y_out'
@@ -92,4 +168,5 @@ def query1(rows):
         print(x,"->",move,"->",y_true)    
 
 rows, b, c = giveData()
-query1(rows)
+constrainedRows = putConstraints(rows)
+query1(constrainedRows)
